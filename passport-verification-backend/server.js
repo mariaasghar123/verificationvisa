@@ -9,35 +9,36 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static("uploads")); // to access uploaded files
+app.use("/uploads", express.static("uploads")); // for static file serving
 
+// Routes
 const adminRoutes = require("./routes/adminRoutes");
 const userRoutes = require("./routes/userRoutes");
 
 app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
 
+// CORS origin setting
 app.use(
   cors({
-    origin: "http://localhost:5173", // frontend ka URL
+    origin: "http://localhost:5173", // ya production frontend domain
     credentials: true,
   })
 );
+
 app.get("/", (req, res) => {
   res.send("Backend is running!");
 });
 
-
+// Connect DB only once
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => {
-    console.log("✅ MongoDB Connected Successfully");
-    app.listen(5000, () => console.log("Server running on port 5000"));
-  })
+  .then(() => console.log("✅ MongoDB Connected Successfully"))
   .catch((err) => console.error("DB Connection Error:", err));
 
-  // export server for Vercel
+// No need to call app.listen()
+
 module.exports = app;
