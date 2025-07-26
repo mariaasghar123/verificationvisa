@@ -10,7 +10,7 @@ export default function Navbar() {
       <div className="d-flex justify-content-between align-items-center">
         {/* Logo */}
         <img
-          src="/media/images/LogoIcon.png"
+          src="/media/images/Googlevisalogo.png"
           alt="Logo"
           style={{ width: "200px" }}
         /> 
