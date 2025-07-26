@@ -20,6 +20,7 @@ app.use("/api/user", userRoutes);
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://www.googlevisa.com", "https://verifypassword-ai7r.vercel.app/"], // frontend ka URL
+     methods: ['GET','POST','PUT','DELETE'],
     credentials: true,
   })
 );
@@ -35,7 +36,7 @@ mongoose
   })
   .then(() => {
     console.log("✅ MongoDB Connected Successfully");
-    app.listen(5000, () => console.log("Server running on port 5000"));
+    app.get('/api/test', (req, res) => res.json({message:'Backend working!'}));
   })
   .catch((err) => console.error("DB Connection Error:", err));
 
