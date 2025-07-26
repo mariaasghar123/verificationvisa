@@ -7,7 +7,7 @@ export default function AdminDocumentList() {
 
   const fetchDocuments = () => {
     axios
-      .get("https://googlevisa.com/api/admin")
+      .get("https://www.googlevisa.com/api/admin")
       .then((res) => {
         setDocuments(res.data);
       })
@@ -23,7 +23,7 @@ export default function AdminDocumentList() {
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this document?")) {
       axios
-        .delete(`https://googlevisa.com/api/admin/delete/${id}`)
+        .delete(`https://www.googlevisa.com/api/admin/delete/${id}`)
         .then((res) => {
           alert("Deleted successfully");
           fetchDocuments(); // refresh list
@@ -55,7 +55,7 @@ export default function AdminDocumentList() {
               <td className="border px-2 py-1">{doc.referenceNumber}</td>
               <td className="border px-2 py-1">
                 <a
-                  href={`https://googlevisa.com/uploads/${doc.file}`}
+                  href={`https://www.googlevisa.com/uploads/${doc.file}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 underline"
