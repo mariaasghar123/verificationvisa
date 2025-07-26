@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import BASE_URL from "../../api/baseUrl";
 
 export default function AdminUploadForm() {
   const [formData, setFormData] = useState({
@@ -10,10 +11,11 @@ export default function AdminUploadForm() {
   });
 
   const handleChange = (e) => {
-    if (e.target.name === "file") {
-      setFormData({ ...formData, file: e.target.files[0] });
+    const { name, value, files } = e.target;
+    if (name === "file") {
+      setFormData({ ...formData, file: files[0] });
     } else {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
+      setFormData({ ...formData, [name]: value });
     }
   };
 
@@ -27,37 +29,52 @@ export default function AdminUploadForm() {
     data.append("file", formData.file);
 
     try {
-      await axios.post("http://localhost:5000/api/admin/upload", data);
+      await axios.post(`${BASE_URL}/api/admin/upload`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       alert("Document uploaded successfully!");
+      // Optional: Reset the form
+      setFormData({
+        name: "",
+        passportNumber: "",
+        referenceNumber: "",
+        file: null,
+      });
     } catch (err) {
-      console.error(err);
-      alert("Upload failed");
+      console.error("Upload failed:", err);
+      alert("Upload failed. Please try again.");
     }
   };
 
   return (
-    <div className="p-4 gap-2">
-      <h2>Admin Document Upload</h2>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
+    <div className="p-4 space-y-4 max-w-md mx-auto bg-gray-100 rounded-lg shadow">
+      <h2 className="text-xl font-semibold text-center">Admin Document Upload</h2>
+      <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-3">
         <input
           name="name"
           type="text"
           placeholder="Name"
+          value={formData.name}
           onChange={handleChange}
+          className="w-full p-2 border rounded mb-3"
           required
         />
         <input
           name="passportNumber"
           type="text"
           placeholder="Passport Number"
+          value={formData.passportNumber}
           onChange={handleChange}
+          className="w-full p-2 border rounded mb-3"
           required
         />
         <input
           name="referenceNumber"
           type="text"
           placeholder="Reference Number"
+          value={formData.referenceNumber}
           onChange={handleChange}
+          className="w-full p-2 border rounded mb-3"
           required
         />
         <input
@@ -65,9 +82,15 @@ export default function AdminUploadForm() {
           type="file"
           accept=".pdf,.jpg,.png"
           onChange={handleChange}
+          className="w-full mb-3"
           required
         />
-        <button type="submit">Upload</button>
+        <button
+          type="submit"
+          className="w-full bg-primary text-white p-2 rounded hover:bg-blue-700"
+        >
+          Upload
+        </button>
       </form>
     </div>
   );
