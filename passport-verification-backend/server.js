@@ -19,7 +19,7 @@ app.use("/api/user", userRoutes);
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://www.googlevisa.com", "https://verifypassword-ai7r.vercel.app/"], // frontend ka URL
+    origin: ["http://localhost:5173", "https://verifypassword-ai7r-git-main-mariaasghar123s-projects.vercel.app", "https://www.googlevisa.com", "https://verifypassword-ai7r.vercel.app/"], // frontend ka URL
      methods: ['GET','POST','PUT','DELETE'],
     credentials: true,
   })
