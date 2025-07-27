@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import BASE_URL from "../../api/baseUrl";
+import BASE_URL from "../../api/baseUrl"
 import { Link } from "react-router-dom";
 
 export default function AdminDocumentList() {
@@ -8,7 +8,7 @@ export default function AdminDocumentList() {
 
   const fetchDocuments = () => {
     axios
-      .get("http://localhost:5000/api/admin")
+      .get(`https://verifypassword-aj7u.vercel.app/api/admin`)
       .then((res) => {
         setDocuments(res.data);
       })
@@ -24,7 +24,7 @@ export default function AdminDocumentList() {
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this document?")) {
       axios
-        .delete(`http://localhost:5000/api/admin/delete/${id}`)
+        .delete(`https://verifypassword-aj7u.vercel.app/api/admin/delete/${id}`)
         .then((res) => {
           alert("Deleted successfully");
           fetchDocuments(); // refresh list
@@ -56,7 +56,7 @@ export default function AdminDocumentList() {
               <td className="border px-2 py-1">{doc.referenceNumber}</td>
               <td className="border px-2 py-1">
                 <a
-                  href={`http://localhost:5000/uploads/${doc.file}`}
+                  href={`https://verifypassword-aj7u.vercel.app/uploads/${doc.file}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 underline"
