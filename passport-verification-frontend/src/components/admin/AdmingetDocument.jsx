@@ -8,7 +8,7 @@ export default function AdminDocumentList() {
 
   const fetchDocuments = () => {
     axios
-      .get(`${BASE_URL}/api/admin`)
+      .get("http://localhost:5000/api/admin")
       .then((res) => {
         setDocuments(res.data);
       })
@@ -24,7 +24,7 @@ export default function AdminDocumentList() {
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this document?")) {
       axios
-        .delete(`${BASE_URL}/api/admin/delete/${id}`)
+        .delete(`http://localhost:5000/api/admin/delete/${id}`)
         .then((res) => {
           alert("Deleted successfully");
           fetchDocuments(); // refresh list
@@ -56,7 +56,7 @@ export default function AdminDocumentList() {
               <td className="border px-2 py-1">{doc.referenceNumber}</td>
               <td className="border px-2 py-1">
                 <a
-                  href={`${BASE_URL}/uploads/${doc.file}`}
+                  href={`http://localhost:5000/uploads/${doc.file}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 underline"
