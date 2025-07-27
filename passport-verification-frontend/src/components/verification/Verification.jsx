@@ -11,7 +11,7 @@ export default function Verify() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/user/verify-document",
+        `${import.meta.env.VITE_API_BASE_URL}/api/user/verify-document`,
         {
           method: "POST",
           headers: {
@@ -85,7 +85,7 @@ export default function Verify() {
               <strong>Uploaded File:</strong>
             </p>
             <img
-              src={`http://localhost:5000/uploads/${result.file}`}
+              src={`${import.meta.env.VITE_API_BASE_URL}uploads/${result.file}`}
               alt="Document"
               width="300"
             />
