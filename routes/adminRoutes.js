@@ -3,18 +3,20 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const Document = require("../models/Document");
+// const upload = require("./upload")
+const {storage}= require("../helpers/uploads")
 
 const router = express.Router();
 
 // File storage config
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "uploads/");
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, Date.now() + path.extname(file.originalname));
+//   },
+// });
 
 const upload = multer({
   storage: storage,
