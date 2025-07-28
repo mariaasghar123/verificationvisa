@@ -5,7 +5,7 @@ const router = express.Router();
 
 const upload = multer({ storage });
 
-router.post('/upload', upload.single('file'), (req, res) => {
+router.post('/admin/upload', upload.single('file'), (req, res) => {
   res.json({ url: req.file.path });
 });
 
