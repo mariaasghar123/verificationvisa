@@ -37,7 +37,7 @@ const upload = multer({
 router.post("/upload", upload.single("file"), async (req, res) => {
   try {
     const { name, passportNumber, referenceNumber } = req.body;
-    const file = req.file ? req.file.filename : undefined;
+    const file = req.file ? req.file.path : undefined;
 
     const newDoc = new Document({
       name,
