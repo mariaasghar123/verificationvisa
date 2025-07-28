@@ -14,7 +14,8 @@ app.use(cors({
     "http://localhost:5173", 
     "https://www.googlevisa.com",
     "https://verifypassword-ai7r.vercel.app",
-    "https://verifypassword-yegn.vercel.app"
+    "https://verifypassword-yegn.vercel.app",
+    "https://verificationvisafrontend.vercel.app"
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
