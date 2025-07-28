@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser")
+const uploadRoutes = require('./routes/upload');
 
 dotenv.config();
 const app = express();
@@ -28,6 +29,7 @@ const adminRoutes = require("./routes/adminRoutes");
 const userRoutes = require("./routes/userRoutes");
 app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
+app.use('/api', uploadRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
