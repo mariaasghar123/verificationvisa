@@ -18,6 +18,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
+  limits: {
+    fileSize: 2 * 1024 * 1024, // 2MB limit
+  },
   fileFilter: function (req, file, cb) {
     const allowed = ["application/pdf", "image/jpeg", "image/jpg"];
     if (allowed.includes(file.mimetype)) {
@@ -43,6 +46,10 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     await newDoc.save();
     res.status(201).json({ message: "Document uploaded successfully." });
   } catch (err) {
+    // Check for multer size limit error
+    if (err.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).json({ error: "File size should not exceed 2MB" });}
+
     res.status(500).json({ error: "Upload failed: " + err.message });
   }
 });
