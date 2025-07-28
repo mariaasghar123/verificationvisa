@@ -83,7 +83,7 @@ export default function AdminUploadForm() {
           accept=".pdf,.jpg,.png"
           onChange={handleChange}
           className="w-full mb-3"
-          required
+          
         />
         <button
           type="submit"
