@@ -4,6 +4,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser")
 const uploadRoutes = require('./routes/upload');
+const PORT = process.env.PORT || 5000;
 
 dotenv.config();
 const app = express();
@@ -46,9 +47,9 @@ mongoose.connect(process.env.MONGO_URL, {
   console.log("✅ MongoDB Connected");
   
   // Only listen locally, Vercel will use the exported app
-  if(process.env.NODE_ENV !== 'production') {
-    app.listen(5000, () => console.log("Local server running on port 5000"));
-  }
+  app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+});
 })
 .catch(err => console.error("DB Connection Error:", err));
 
