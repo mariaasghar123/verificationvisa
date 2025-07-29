@@ -1,85 +1,96 @@
-// routes/adminRoutes.js
 const express = require("express");
 const multer = require("multer");
-const path = require("path");
 const Document = require("../models/Document");
-// const upload = require("./upload")
-const {storage}= require("../helpers/uploads")
+const { cloudinary , storage } = require("../helpers/uploads");
 
 const router = express.Router();
-
-// File storage config
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "uploads/");
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, Date.now() + path.extname(file.originalname));
-//   },
-// });
 
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 2 * 1024 * 1024, // 2MB limit
+    fileSize: 50 * 1024 * 1024, // 50MB limit
   },
   fileFilter: function (req, file, cb) {
-    const allowed = ["application/pdf", "image/jpeg", "image/jpg"];
+    const allowed = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
     if (allowed.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error("Only PDF and JPG allowed"));
+      cb(new Error("Only PDF, JPG, and PNG allowed"));
     }
   },
 });
 
 // Admin can upload document
-router.post("/upload", upload.single("file"), async (req, res) => {
+router.post("/upload", upload.array("files", 10), async (req, res) => {
+  console.log("Upload request received");
+  console.log("Request body:", req.body);
+  console.log("Files received:", req.files);
   try {
     const { name, passportNumber, referenceNumber } = req.body;
-    const file = req.file ? req.file.path : undefined;
+    const files = req.files;
+    console.log("Uploaded files:", files); // Debug log
+    if (!files || files.length === 0) {
+      return res.status(400).json({ error: "No files uploaded" });
+    }
+    // const fileUrls = files.map(file => file.path.replace('/image/upload/', '/raw/upload/'));
+      // Get Cloudinary URLs (don't modify them)
+    //const fileUrls = files.map(file => file.path);
+    const fileUrls = files.map(file => file.path || file.secure_url || file.url);
+
+
+    // Check for duplicate referenceNumber
+    const existingDoc = await Document.findOne({ referenceNumber });
+    if (existingDoc) {
+      return res.status(400).json({ error: "Reference number already exists" });
+    }
 
     const newDoc = new Document({
       name,
       passportNumber,
       referenceNumber,
-      file,
+      file: fileUrls,
     });
-    await newDoc.save();
-    res.status(201).json({ message: "Document uploaded successfully." });
-  } catch (err) {
-    // Check for multer size limit error
-    if (err.code === "LIMIT_FILE_SIZE") {
-      return res.status(400).json({ error: "File size should not exceed 2MB" });}
 
+    await newDoc.save();
+    console.log("Saved document:", newDoc); // Debug log
+    res.status(201).json({ message: "Document uploaded successfully", files: fileUrls });
+  } catch (err) {
+    console.error("Upload error:", err); // Debug log
+    if (err.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).json({ error: "File size should not exceed 2MB" });
+    }
+    if (err.name === "MongoServerError" && err.code === 11000) {
+      return res.status(400).json({ error: "Reference number already exists" });
+    }
     res.status(500).json({ error: "Upload failed: " + err.message });
   }
 });
 
+// Fetch all documents
 router.get("/", async (req, res) => {
-  const docs = await Document.find();
-  console.log(docs);
-  res.json(docs);
+  try {
+    const docs = await Document.find();
+    console.log("Fetched documents:", docs); // Debug log
+    res.json(docs);
+  } catch (err) {
+    console.error("Fetch error:", err); // Debug log
+    res.status(500).json({ error: "Failed to fetch documents: " + err.message });
+  }
 });
+
 // DELETE document by ID
 router.delete("/delete/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const document = await Document.findByIdAndDelete(id); // Replace Document with your model name
+    const document = await Document.findByIdAndDelete(id);
 
     if (!document) {
       return res.status(404).json({ message: "Document not found" });
     }
 
-    // Optionally, delete file from /uploads folder too
-    const fs = require("fs");
-    const filePath = `uploads/${document.file}`; // adjust according to your DB field
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
-
     res.status(200).json({ message: "Document deleted successfully" });
   } catch (error) {
+    console.error("Delete error:", error); // Debug log
     res.status(500).json({ error: "Something went wrong" });
   }
 });

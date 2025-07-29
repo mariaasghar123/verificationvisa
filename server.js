@@ -23,6 +23,9 @@ app.use(cors({
   credentials: true
 }));
 app.use(bodyParser.json())
+// Add these right after express.json()
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));

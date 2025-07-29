@@ -6,7 +6,7 @@ const documentSchema = new mongoose.Schema({
   passportNumber: String,
   referenceNumber: { type: String, unique: true },
   file: {
-    type: String,
+    type: [String],
     required: false,
   },
 });
