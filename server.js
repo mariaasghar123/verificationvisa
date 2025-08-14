@@ -17,15 +17,18 @@ app.use(cors({
     "https://verifypassword-ai7r.vercel.app",
     "https://verifypassword-yegn.vercel.app",
     "https://verificationvisafrontend.vercel.app",
-    "https://verificationvisafrontend-rn1q.vercel.app/"
+    "https://verificationvisafrontend-rn1q.vercel.app",
+    "https://verificationvisa.vercel.app"
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
 app.use(bodyParser.json())
 // Add these right after express.json()
-app.use(bodyParser.json({ limit: '10mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+
+
 
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
@@ -41,6 +44,7 @@ app.use('/api', uploadRoutes);
 app.get("/api/health", (req, res) => {
   res.json({ status: "healthy", db: mongoose.connection.readyState === 1 ? "connected" : "disconnected" });
 });
+
 
 // DB Connection
 mongoose.connect(process.env.MONGO_URL, {
